@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume Analyzer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f7f7f5;
+      color: #111;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 780px; margin: 0 auto; }
+
+    h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+    .subtitle { font-size: 14px; color: #888; margin-bottom: 2rem; }
+
+    /* UPLOAD CARD */
+    .upload-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .upload-area {
+      border: 2px dashed #ddd;
+      border-radius: 10px;
+      padding: 2.5rem 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+    .upload-area:hover { border-color: #aaa; }
+    .upload-area.dragover { border-color: #111; background: #f9f9f9; }
+
+    .upload-icon { font-size: 36px; margin-bottom: 10px; }
+    .upload-text { font-size: 15px; color: #555; margin-bottom: 4px; }
+    .upload-sub { font-size: 12px; color: #aaa; }
+    .file-name { font-size: 13px; color: #111; font-weight: 500; margin-top: 10px; }
+
+    #fileInput { display: none; }
+
+    .analyze-btn {
+      padding: 11px 32px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      display: none;
+    }
+    .analyze-btn:hover { background: #333; }
+    .analyze-btn:disabled { background: #aaa; cursor: not-allowed; }
+
+    /* LOADING */
+    .loading { display: none; text-align: center; padding: 1rem; }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #e5e5e5;
+      border-top-color: #111;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* RESULTS */
+    .results { display: none; }
+
+    .score-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .score-label { font-size: 13px; color: #888; margin-bottom: 8px; }
+    .score-number { font-size: 56px; font-weight: 700; }
+    .score-bar-wrap { background: #f0f0f0; border-radius: 20px; height: 8px; margin: 12px auto; max-width: 300px; }
+    .score-bar { height: 8px; border-radius: 20px; transition: width 1s ease; }
+    .score-tag { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; margin-top: 4px; }
+
+    .section-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .section-title { font-size: 14px; font-weight: 600; margin-bottom: 1rem; color: #111; }
+
+    /* FEEDBACK */
+    .feedback-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f5f5f5;
+      font-size: 13px;
+    }
+    .feedback-item:last-child { border-bottom: none; }
+    .badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .badge.success { background: #eafaf1; color: #27ae60; }
+    .badge.error   { background: #fff5f5; color: #e74c3c; }
+    .badge.warning { background: #fef9e7; color: #d68910; }
+    .badge.info    { background: #eaf4fb; color: #2980b9; }
+
+    /* SKILLS */
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .skill-group-title { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid #e5e5e5;
+    }
+    .pill.found   { background: #eafaf1; color: #27ae60; border-color: #a9dfbf; }
+    .pill.missing { background: #f9f9f9; color: #aaa; border-color: #e5e5e5; }
+
+    /* CONTACT GRID */
+    .contact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .contact-item {
+      text-align: center;
+      padding: 12px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .contact-item.yes { background: #eafaf1; color: #27ae60; }
+    .contact-item.no  { background: #fff5f5; color: #e74c3c; }
+    .contact-icon { font-size: 18px; margin-bottom: 4px; }
+
+    /* SECTIONS */
+    .section-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .error-box {
+      background: #fff5f5;
+      border: 1px solid #f5c6c6;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #e74c3c;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    @media (max-width: 500px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Resume Analyzer</h1>
+  <p class="subtitle">Upload your resume and get instant feedback on what's working and what's not.</p>
+
+  <!-- UPLOAD -->
+  <div class="upload-card">
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📄</div>
+      <div class="upload-text">Click to upload your resume</div>
+      <div class="upload-sub">PDF only · Max 5MB</div>
+      <div class="file-name" id="fileName"></div>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf" onchange="onFileSelect(event)" />
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyzeResume()">Analyze Resume</button>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p style="font-size:13px;color:#888;">Analyzing your resume...</p>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+
+    <!-- SCORE -->
+    <div class="score-card">
+      <div class="score-label">Resume score</div>
+      <div class="score-number" id="scoreNumber">0</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar" id="scoreBar" style="width:0%;"></div>
+      </div>
+      <span class="score-tag" id="scoreTag"></span>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="section-card">
+      <div class="section-title">Feedback</div>
+      <div id="feedbackList"></div>
+    </div>
+
+    <!-- CONTACT INFO -->
+    <div class="section-card">
+      <div class="section-title">Contact info</div>
+      <div class="contact-grid" id="contactGrid"></div>
+    </div>
+
+    <!-- SECTIONS FOUND -->
+    <div class="section-card">
+      <div class="section-title">Sections detected</div>
+      <div class="section-pills" id="sectionPills"></div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="section-card">
+      <div class="section-title">Skills detected</div>
+      <div id="skillsContent"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let selectedFile = null;
+
+  // ── Drag & Drop ───────────────────────────────────────────
+  const uploadArea = document.getElementById('uploadArea');
+  uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+  uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+
+  function onFileSelect(e) { handleFile(e.target.files[0]); }
+
+  function handleFile(file) {
+    if (!file.name.endsWith('.pdf')) {
+      showError('Only PDF files are supported.');
+      return;
+    }
+    selectedFile = file;
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('analyzeBtn').style.display = 'inline-block';
+    hideError();
+  }
+
+  // ── Analyze ───────────────────────────────────────────────
+  async function analyzeResume() {
+    if (!selectedFile) return;
+
+    const btn = document.getElementById('analyzeBtn');
+    btn.disabled = true;
+    btn.textContent = 'Analyzing...';
+
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    hideError();
+
+    const formData = new FormData();
+    formData.append('resume', selectedFile);
+
+    try {
+      const res = await fetch('/analyze', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (data.error) {
+        showError(data.error);
+      } else {
+        renderResults(data);
+      }
+    } catch (err) {
+      showError('Something went wrong. Make sure the Flask server is running.');
+    } finally {
+      document.getElementById('loading').style.display = 'none';
+      btn.disabled = false;
+      btn.textContent = 'Analyze Resume';
+    }
+  }
+
+  // ── Render Results ────────────────────────────────────────
+  function renderResults(data) {
+    // Score
+    const score = data.score;
+    document.getElementById('scoreNumber').textContent = score;
+    const bar = document.getElementById('scoreBar');
+    bar.style.width = score + '%';
+    bar.style.background = score >= 75 ? '#27ae60' : score >= 50 ? '#d68910' : '#e74c3c';
+
+    const tag = document.getElementById('scoreTag');
+    if (score >= 80) { tag.textContent = 'Strong'; tag.style.cssText = 'background:#eafaf1;color:#27ae60;'; }
+    else if (score >= 60) { tag.textContent = 'Decent'; tag.style.cssText = 'background:#eaf4fb;color:#2980b9;'; }
+    else if (score >= 40) { tag.textContent = 'Needs work'; tag.style.cssText = 'background:#fef9e7;color:#d68910;'; }
+    else { tag.textContent = 'Weak'; tag.style.cssText = 'background:#fff5f5;color:#e74c3c;'; }
+
+    // Feedback
+    document.getElementById('feedbackList').innerHTML = data.feedback.map(f => `
+      <div class="feedback-item">
+        <span class="badge ${f.type}">${f.type.toUpperCase()}</span>
+        <span>${f.msg}</span>
+      </div>
+    `).join('');
+
+    // Contact
+    const c = data.contact;
+    const contacts = [
+      { label: 'Email', key: 'email', icon: '✉' },
+      { label: 'Phone', key: 'phone', icon: '📞' },
+      { label: 'LinkedIn', key: 'linkedin', icon: 'in' },
+      { label: 'GitHub', key: 'github', icon: 'GH' },
+    ];
+    document.getElementById('contactGrid').innerHTML = contacts.map(x => `
+      <div class="contact-item ${c[x.key] ? 'yes' : 'no'}">
+        <div class="contact-icon">${x.icon}</div>
+        <div>${x.label}</div>
+        <div style="font-size:10px;margin-top:2px;">${c[x.key] ? 'Found' : 'Missing'}</div>
+      </div>
+    `).join('');
+
+    // Sections
+    const allSections = [...data.found_sections, ...data.missing_sections];
+    document.getElementById('sectionPills').innerHTML = allSections.map(s => `
+      <span class="pill ${data.found_sections.includes(s) ? 'found' : 'missing'}">
+        ${data.found_sections.includes(s) ? '✓' : '✗'} ${s}
+      </span>
+    `).join('');
+
+    // Skills
+    let skillsHTML = '<div class="skills-grid">';
+    for (const category in data.found_skills) {
+      const found = data.found_skills[category];
+      const missing = data.missing_skills[category];
+      skillsHTML += `
+        <div>
+          <div class="skill-group-title">${category}</div>
+          <div class="pill-row">
+            ${found.map(s => `<span class="pill found">${s}</span>`).join('')}
+            ${missing.slice(0, 4).map(s => `<span class="pill missing">${s}</span>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+    skillsHTML += '</div>';
+    document.getElementById('skillsContent').innerHTML = skillsHTML;
+
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.style.display = 'block';
+  }
+  function hideError() {
+    document.getElementById('errorBox').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
