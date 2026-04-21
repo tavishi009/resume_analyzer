@@ -10,8 +10,8 @@ Upload your resume and get instant feedback — what's missing, what's weak, and
 - Detects 40+ technical skills across categories like Web Dev, ML, Databases, etc.
 - Checks for important sections (Projects, Experience, Skills, etc.).
 - Flags weak phrases like "responsible for" or "helped with".
-- Checks if email, phone, LinkedIn, and GitHub are present
-- Gives a score out of 100 with feedback on what to fix
+- Checks if email, phone, LinkedIn, and GitHub are present.
+- Gives a score out of 100 with feedback on what to fix.
 
 ---
 
