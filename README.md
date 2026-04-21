@@ -6,7 +6,7 @@ Upload your resume and get instant feedback — what's missing, what's weak, and
 
 ## What it does
 
-- Upload any PDF resume
+- Upload any PDF resume.
 - Detects 40+ technical skills across categories like Web Dev, ML, Databases, etc.
 - Checks for important sections (Projects, Experience, Skills, etc.)
 - Flags weak phrases like "responsible for" or "helped with"
