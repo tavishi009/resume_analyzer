@@ -33,11 +33,6 @@ pip install flask pymupdf
 python app.py
 ```
 
-**4. Open your browser and go to**
-```
-http://127.0.0.1:5000
-```
-
 That's it. Upload a PDF resume and you'll get results in seconds.
 
 ---
