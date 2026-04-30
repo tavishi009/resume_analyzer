@@ -9,7 +9,7 @@ SKILLS = {
     "Soft Skills Keywords": ["leadership", "teamwork", "communication", "problem solving", "critical thinking", "time management", "adaptability"]
 }
 
-IMPORTANT_SECTIONS = ["education", "experience", "projects", "skills", "internship", "achievements", "certifications", "summary", "objective"]
+IMPORTANT_SECTIONS = ["education", "experience", "projects", "skills", "internship", "achievements", "certifications", "summary", "objective" , "hobbies", "languages", "publications"]
 
 STRONG_ACTION_WORDS = ["built", "developed", "designed", "implemented", "created", "led", "improved", "optimized", "deployed", "automated", "managed", "architected", "launched", "delivered"]
 
