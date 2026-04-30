@@ -6,6 +6,7 @@ SKILLS = {
     "Databases": ["sql", "mysql", "postgresql", "mongodb", "sqlite", "firebase", "redis", "oracle"],
     "Tools & Platforms": ["git", "github", "docker", "linux", "aws", "azure", "gcp", "figma", "postman", "jira"],
     "Data & ML": ["machine learning", "deep learning", "pandas", "numpy", "tensorflow", "pytorch", "scikit-learn", "data analysis", "nlp"],
+    "Soft Skills Keywords": ["leadership", "teamwork", "communication", "problem solving", "critical thinking", "time management", "adaptability"]
 }
 
 IMPORTANT_SECTIONS = ["education", "experience", "projects", "skills", "internship", "achievements", "certifications", "summary", "objective"]
