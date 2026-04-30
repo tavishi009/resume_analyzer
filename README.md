@@ -12,6 +12,8 @@ Upload your resume and get instant feedback — what's missing, what's weak, and
 - Flags weak phrases like "responsible for" or "helped with".
 - Checks if email, phone, LinkedIn, and GitHub are present.
 - Gives a score out of 100 with feedback on what to fix.
+- Detects soft skills keywords like leadership, teamwork, communication
+- Checks for additional sections like hobbies, languages, publications
 
 ---
 
