@@ -65,7 +65,9 @@ resume-analyzer/
 
 ## Note
 
-Only works with text-based PDFs. Scanned image resumes won't work since there's no OCR.
+- Only works with text-based PDFs — scanned image resumes won't work (no OCR)
+- Action word detection now covers 24 strong verbs
+- Soft skills keywords are detected separately from technical skills
 
 ---
 
