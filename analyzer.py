@@ -11,7 +11,7 @@ SKILLS = {
 
 IMPORTANT_SECTIONS = ["education", "experience", "projects", "skills", "internship", "achievements", "certifications", "summary", "objective" , "hobbies", "languages", "publications"]
 
-STRONG_ACTION_WORDS = ["built", "developed", "designed", "implemented", "created", "led", "improved", "optimized", "deployed", "automated", "managed", "architected", "launched", "delivered"]
+STRONG_ACTION_WORDS = ["built", "developed", "designed", "implemented", "created", "led", "improved", "optimized", "deployed", "automated", "managed", "architected", "launched", "delivered", "researched", "analyzed", "presented", "collaborated", "contributed", "integrated", "tested", "documented", "maintained", "refactored" ]
 
 WEAK_PHRASES = ["responsible for", "worked on", "helped with", "assisted in", "was involved in", "participated in"]
 
